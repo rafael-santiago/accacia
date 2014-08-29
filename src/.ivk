@@ -1,0 +1,1 @@
+--forgefiles=Forgefile.hsl --Forgefile-projects=accacia --link-model=static --compile-model=release --bin-output-dir=../lib --obj-output-dir=obj/
