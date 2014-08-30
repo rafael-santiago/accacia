@@ -1,0 +1,25 @@
+include ~/toolsets/gcc/gcc-app.hsl
+
+var sources type list;
+var includes type list;
+var cflags type list;
+var libraries type list;
+var ldflags type list;
+
+project kbhit-sample : toolset "gcc-c-app" : $sources, $includes, $cflags, $libraries, $ldflags, "kbhit-sample";
+
+kbhit-sample.prologue() {
+    hefesto.sys.echo("____\nbuilding kbhit sample...\n");
+    $sources.ls(".*\\.c$");
+    $cflags.add_item("-Wall");
+    $includes.add_item("../../");
+    $ldflags.add_item("../../../lib/libaccacia.a");
+}
+
+kbhit-sample.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        hefesto.sys.echo("\n____\nsuccess!\n");
+    } else {
+        hefesto.sys.echo("\n____\nerror...\n");
+    }
+}

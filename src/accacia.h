@@ -1,11 +1,16 @@
 /*
  *                                      Copyright 2006 rafael santiago.
  *
+ * This is free software. You can redistribute it and/or modify under
+ * the terms of the GNU General Public License version 2.
+ *
  * "accacia.h" by Rafael Santiago < voidbrainvoid@yahoo.com.br >
  *
  */
 #ifndef _ACCACIA_H_
 #define _ACCACIA_H_
+
+#include <unistd.h>
 
 #define accacia_delay(n) usleep(n * 1000)
 

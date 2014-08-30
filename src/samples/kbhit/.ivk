@@ -1,0 +1,1 @@
+--forgefiles=Forgefile.hsl --Forgefile-projects=kbhit-sample --compile-mode=release --link-mode=static --bin-output-dir=../../../samples --obj-output-dir=obj

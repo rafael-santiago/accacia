@@ -1,6 +1,9 @@
 /*
  *                                      Copyright 2006 rafael santiago.
  *
+ * This is free software. You can redistribute it and/or modify under
+ * the terms of the GNU General Public License version 2.
+ *
  * "accacia.c" by Rafael Santiago < voidbrainvoid@yahoo.com.br >
  *  Thu 27 Jul 2006 08:33:51 PM BRT
  *
@@ -94,7 +97,8 @@ void accacia_drawbox(const int x, const int y, const int width, const int height
     accacia_gotoxy(x, y);
 }
 
-void accacia_drawboxwcharfill(const int x, const int y, const int width, const int height, const char charfill, const ACCACIA_TEXT_COLOR tcolor, const ACCACIA_BACKGROUND_COLOR bcolor) {
+void accacia_drawboxwcharfill(const int x, const int y, const int width, const int height, const char charfill,
+                              const ACCACIA_TEXT_COLOR tcolor, const ACCACIA_BACKGROUND_COLOR bcolor) {
     int i, j, xtemp = x, ytemp = y;
     accacia_textbackground(bcolor);
     accacia_textcolor(tcolor);
@@ -106,7 +110,9 @@ void accacia_drawboxwcharfill(const int x, const int y, const int width, const i
     accacia_gotoxy(x,y); 
 }
 
-void accacia_drawtopmargin(const int x, const int y, const int width, const char *title, const ACCACIA_TEXT_COLOR titlecolor, const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
+void accacia_drawtopmargin(const int x, const int y, const int width, const char *title,
+                           const ACCACIA_TEXT_COLOR titlecolor, const ACCACIA_BACKGROUND_COLOR margincolor,
+                           const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int i;
     accacia_textbackground(margincolor);
     accacia_gotoxy(x, y);
@@ -120,7 +126,9 @@ void accacia_drawtopmargin(const int x, const int y, const int width, const char
     accacia_gotoxy(x, y+1);
 }
 
-void accacia_drawbottommargin(const int x, const int y, const int width, const int height, const char *title, const ACCACIA_TEXT_COLOR titlecolor, const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
+void accacia_drawbottommargin(const int x, const int y, const int width, const int height,
+                              const char *title, const ACCACIA_TEXT_COLOR titlecolor,
+                              const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int i;
     accacia_textbackground(margincolor);
     accacia_gotoxy(x, y + height);
@@ -134,7 +142,8 @@ void accacia_drawbottommargin(const int x, const int y, const int width, const i
     accacia_gotoxy(x, y);
 }
 
-void accacia_drawleftmargin(const int x, const int y, const int height, const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
+void accacia_drawleftmargin(const int x, const int y, const int height, const ACCACIA_BACKGROUND_COLOR margincolor,
+                            const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int ytemp = y;
     accacia_textbackground(margincolor);
     for(; ytemp <= y + height; accacia_gotoxy(x, ytemp), printf(" "), ytemp++);
@@ -142,7 +151,8 @@ void accacia_drawleftmargin(const int x, const int y, const int height, const AC
     accacia_gotoxy(x + 1, y);
 }
 
-void accacia_drawrightmargin(const int x, const int y, const int width, const int height, const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
+void accacia_drawrightmargin(const int x, const int y, const int width, const int height,
+                             const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int ytemp = y;
     accacia_textbackground(margincolor);
     for(; ytemp <= y + height; accacia_gotoxy(x + width - 1, ytemp), printf(" "), ytemp++);
@@ -150,7 +160,11 @@ void accacia_drawrightmargin(const int x, const int y, const int width, const in
     accacia_gotoxy(x, y);
 }
 
-void accacia_drawboxgine(const int x, const int y, const int width, const int height, const ACCACIA_BACKGROUND_COLOR boxcolor, const ACCACIA_BACKGROUND_COLOR margincolor, const char *toptitle, const ACCACIA_TEXT_COLOR toptitlecolor, const char *bottomtitle, const ACCACIA_TEXT_COLOR bottomtitlecolor, const int margintop, const int marginbottom, const int marginleft, const int marginright) {
+void accacia_drawboxgine(const int x, const int y, const int width, const int height,
+                         const ACCACIA_BACKGROUND_COLOR boxcolor, const ACCACIA_BACKGROUND_COLOR margincolor,
+                         const char *toptitle, const ACCACIA_TEXT_COLOR toptitlecolor, const char *bottomtitle,
+                         const ACCACIA_TEXT_COLOR bottomtitlecolor, const int margintop, const int marginbottom,
+                         const int marginleft, const int marginright) {
     accacia_drawbox(x, y, width, height, boxcolor);
     if (marginleft) {
         accacia_drawleftmargin(x, y, height, margincolor, boxcolor);
@@ -166,7 +180,12 @@ void accacia_drawboxgine(const int x, const int y, const int width, const int he
     }
 }
 
-void accacia_drawboxwcharfillgine(const int x, const int y, const int width, const int height, const char charfill, const ACCACIA_TEXT_COLOR ccolor, const ACCACIA_BACKGROUND_COLOR boxcolor, const ACCACIA_BACKGROUND_COLOR margincolor, const char *toptitle, const ACCACIA_TEXT_COLOR toptitlecolor, const char *bottomtitle, const ACCACIA_TEXT_COLOR bottomtitlecolor, const int margintop, const int marginbottom, const int marginleft, const int marginright) {
+void accacia_drawboxwcharfillgine(const int x, const int y, const int width, const int height, const char charfill,
+                                  const ACCACIA_TEXT_COLOR ccolor, const ACCACIA_BACKGROUND_COLOR boxcolor,
+                                  const ACCACIA_BACKGROUND_COLOR margincolor, const char *toptitle,
+                                  const ACCACIA_TEXT_COLOR toptitlecolor, const char *bottomtitle,
+                                  const ACCACIA_TEXT_COLOR bottomtitlecolor, const int margintop,
+                                  const int marginbottom, const int marginleft, const int marginright) {
     accacia_drawboxwcharfill(x, y, width, height, charfill, ccolor, boxcolor);
     if (marginleft) {
         accacia_drawleftmargin(x, y, height, margincolor, boxcolor);

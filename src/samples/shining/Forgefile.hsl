@@ -1,0 +1,25 @@
+include ~/toolsets/gcc/gcc-app.hsl
+
+var sources type list;
+var includes type list;
+var cflags type list;
+var libraries type list;
+var ldflags type list;
+
+project shining : toolset "gcc-c-app" : $sources, $includes, $cflags, $libraries, $ldflags, "shining";
+
+shining.prologue() {
+    hefesto.sys.echo("____\nbuilding shining...\n");
+    $sources.ls(".*\\.c$");
+    $cflags.add_item("-Wall");
+    $includes.add_item("../..");
+    $ldflags.add_item("../../../lib/libaccacia.a");
+}
+
+shining.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        hefesto.sys.echo("\n____\nsuccess!\n");
+    } else {
+        hefesto.sys.echo("\n____\nerror...\n");
+    }
+}

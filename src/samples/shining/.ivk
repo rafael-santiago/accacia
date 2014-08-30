@@ -1,0 +1,1 @@
+--forgefiles=Forgefile.hsl --Forgefile-projects=shining --obj-output-dir=obj/ --bin-output-dir=../../../samples --compile-model=release --link-model=static

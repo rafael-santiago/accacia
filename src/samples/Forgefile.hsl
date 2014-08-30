@@ -1,0 +1,27 @@
+#                                  (C) Copyright Rafael Santiago 2014
+#
+# This is free software. You can redistribute it and/or modify under
+# the terms of the GNU General Public License version 2.
+#
+include ~/toolsets/utils/forge_projects.hsl
+include ~/fsutil.hsl
+include ~/toolsets/null/null.hsl
+
+var exit_code type int;
+
+project accacia-samples : toolset "no-tool-any-set" : 0;
+
+accacia-samples.prologue() {
+    hefesto.sys.echo("____\nnow building samples...\n\n");
+    var cwd type list;
+    $cwd = lsdir();
+    $exit_code = forge_projects($cwd);
+}
+
+accacia-samples.epilogue() {
+    if ($exit_code == 0) {
+        hefesto.sys.echo("\n____\nsamples built!\n");
+    } else {
+        hefesto.sys.echo("\n____\nsamples build error...\n");
+    }
+}
