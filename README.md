@@ -2,6 +2,8 @@
 
 ## What is this?
 
+A tiny project from 2006 :)
+
 Accacia is a lib which puts together some console I/O functions. This library
 is suitable for systems with Ansi Color Coding terminals.
 
@@ -10,7 +12,7 @@ As you can see by the acronym that the name of this lib is based:
 [A]nsi [C]olor [C]oding [A]nd [C]onsole [I]nput [A]vailable
 
 When I did it I've decided to follow the old Borland's "conio.h" style, because
-the motivation to create Accacia was the lack of an easy way to got a colored
+the motivation to create Accacia was the lack of an easy way to get a colored
 output in a console mode program on Linux.
 
 In my opinion I think libcurses impractical when dealing with simple things.
@@ -20,9 +22,9 @@ In my opinion I think libcurses impractical when dealing with simple things.
 In order to build Accacia you need to use [Hefesto](http://github.com/rafael-santiago/hefesto.git).
 
 After follow the steps to install Hefesto in your system, all you need to do
-(on shell) inside dnsf_ckr src subdirectory is invoke hefesto. Something like this:
+(on shell) inside accacia src subdirectory is invoke hefesto. Something like this:
 
-    root@zephyr:~/src/dnsf_ckr/src# hefesto
+    root@zephyr:~/src/accacia/src# hefesto
 
 
 Enjoy!!
@@ -51,10 +53,10 @@ Eu particularmente acho a libcurses pouco prática para coisas mais simples.
 Para compilar o dnsf_ckr você precisa usar o [Hefesto](http://github.com/rafael-santiago/hefesto.git).
 
 Depois de seguir os passos para instalar o Hefesto em seu sistema, tudo o que
-você precisa fazer (no shell) dentro do subdiretório src do dnsf_ckr é invocar
+você precisa fazer (no shell) dentro do subdiretório src do accacia é invocar
 o hefesto. Algo nessa linha:
 
-    root@zephyr:~/src/dnsf_ckr/src# hefesto
+    root@zephyr:~/src/accacia/src# hefesto
 
 
 Aproveite!!
