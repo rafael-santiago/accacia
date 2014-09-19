@@ -26,6 +26,11 @@ After follow the steps to install Hefesto in your system, all you need to do
 
     root@zephyr:~/src/accacia/src# hefesto
 
+In order to build the samples... being inside the subdirectory "src/samples", just type "hefesto":
+
+    root@zephyr:~/src/accacia/src/samples# hefesto
+
+It must work fine and you'll find your samples at "src/accacia/samples".
 
 Enjoy!!
 
@@ -58,6 +63,11 @@ o hefesto. Algo nessa linha:
 
     root@zephyr:~/src/accacia/src# hefesto
 
+Para construir as demonstrações... estando dentro do subdiretório "src/samples", apenas digite "hefesto":
+
+    root@zephyr:~/src/accacia/src/samples# hefesto
+
+Isso deve funcionar de boa e você encontrará suas demonstrações em "src/accacia/samples".
 
 Aproveite!!
 

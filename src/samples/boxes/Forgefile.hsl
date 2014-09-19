@@ -1,0 +1,26 @@
+include ~/toolsets/gcc/gcc-app.hsl
+
+var sources type list;
+var includes type list;
+var cflags type list;
+var libraries type list;
+var ldflags type list;
+
+project boxes : toolset "gcc-c-app" : $sources, $includes, $cflags, $libraries, $ldflags, "boxes";
+
+boxes.prologue() {
+    hefesto.sys.echo("___\nbuilding boxes sample....\n");
+    $includes.add_item("../../");
+    $ldflags.add_item("../../../lib/libaccacia.a");
+    $cflags = hefesto.sys.get_option("cflags");
+    $cflags.add_item("-Wall");
+    $sources.ls(".*\\.[cC]$");
+}
+
+boxes.epilogue() {
+    if (hefesto.sys.last_forge_result() == 0) {
+        hefesto.sys.echo("___\nsuccess!\n");
+    } else {
+        hefesto.sys.echo("___\nerror...\n");
+    }
+}

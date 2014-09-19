@@ -1,0 +1,1 @@
+--forgefiles=Forgefile.hsl --Forgefile-projects=boxes --cflags=-DBOXES_NR=7 --obj-output-dir=obj --bin-output-dir=../../../samples --link-model=static --compile-model=release
