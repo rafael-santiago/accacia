@@ -30,7 +30,7 @@ In order to build the samples... being inside the subdirectory "src/samples", ju
 
     root@zephyr:~/src/accacia/src/samples# hefesto
 
-It must work fine and you'll find your samples at "src/accacia/samples".
+It must work fine and you'll find your samples at "accacia/samples".
 
 Enjoy!!
 
@@ -67,7 +67,7 @@ Para construir as demonstrações... estando dentro do subdiretório "src/samples",
 
     root@zephyr:~/src/accacia/src/samples# hefesto
 
-Isso deve funcionar de boa e você encontrará suas demonstrações em "src/accacia/samples".
+Isso deve funcionar de boa e você encontrará suas demonstrações em "accacia/samples".
 
 Aproveite!!
 
