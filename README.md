@@ -11,7 +11,7 @@ As you can see by the acronym that the name of this lib is based:
 
 [A]nsi [C]olor [C]oding [A]nd [C]onsole [I]nput [A]vailable
 
-When I did it I've decided to follow the old Borland's "conio.h" style, because
+When I did it I'd decided to follow the old Borland's "conio.h" style, because
 the motivation to create Accacia was the lack of an easy way to get a colored
 output in a console mode program on Linux.
 
