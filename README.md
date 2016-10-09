@@ -9,13 +9,13 @@ is suitable for systems with Ansi Color Coding terminals.
 
 As you can see by the acronym that the name of this lib is based:
 
-[A]nsi [C]olor [C]oding [A]nd [C]onsole [I]nput [A]vailable
+``A``nsi ``c``olor ``c``oding ``a``nd ``c``onsole ``i``nput ``a``vailable.
 
 When I did it I'd decided to follow the old Borland's "conio.h" style, because
 the motivation to create Accacia was the lack of an easy way to get a colored
 output in a console mode program on Linux.
 
-In my opinion I think libcurses impractical when dealing with simple things.
+I think libcurses impractical when dealing with simple things.
 
 ## How to build it?
 
@@ -24,51 +24,16 @@ In order to build Accacia you need to use [Hefesto](http://github.com/rafael-san
 After follow the steps to install Hefesto in your system, all you need to do
 (on shell) inside accacia src subdirectory is invoke hefesto. Something like this:
 
-    root@zephyr:~/src/accacia/src# hefesto
+```
+root@zephyr:~/src/accacia/src# hefesto
+```
 
 In order to build the samples... being inside the subdirectory "src/samples", just type "hefesto":
 
-    root@zephyr:~/src/accacia/src/samples# hefesto
+```
+root@zephyr:~/src/accacia/src/samples# hefesto
+```
 
 It must work fine and you'll find your samples at "accacia/samples".
 
-Enjoy!!
-
-Santiago.
-
-## O que é?
-
-Um revival de um pequeno projeto de 2006 :)
-
-Accacia é uma lib que reúne algumas funções de I/O de console. Ela é indicada
-para sistemas que possuem terminais que dão suporte para Ansi Color Coding.
-
-Leve em conta que o nome dessa lib é um acrônimo para:
-
-[A]nsi [C]olor [C]oding [A]nd [C]onsole [I]nput [A]vailable
-
-Quando fiz isso procurei seguir a linha da velha "conio.h" da Borland, pois
-a motivação para criar a Accacia foi a falta de uma forma fácil de colorizar o
-output em programas modo console no Linux.
-
-Eu particularmente acho a libcurses pouco prática para coisas mais simples.
-
-## Como compilar isso?
-
-Para compilar o dnsf_ckr você precisa usar o [Hefesto](http://github.com/rafael-santiago/hefesto.git).
-
-Depois de seguir os passos para instalar o Hefesto em seu sistema, tudo o que
-você precisa fazer (no shell) dentro do subdiretório src do accacia é invocar
-o hefesto. Algo nessa linha:
-
-    root@zephyr:~/src/accacia/src# hefesto
-
-Para construir as demonstrações... estando dentro do subdiretório "src/samples", apenas digite "hefesto":
-
-    root@zephyr:~/src/accacia/src/samples# hefesto
-
-Isso deve funcionar de boa e você encontrará suas demonstrações em "accacia/samples".
-
-Aproveite!!
-
-Santiago.
+Enjoy!

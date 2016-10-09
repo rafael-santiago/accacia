@@ -19,7 +19,7 @@
 
 void accacia_gotoxy(const int x, const int y) {
     printf("\033[%d;%dH", y, x);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
@@ -27,56 +27,56 @@ void accacia_gotoxy(const int x, const int y) {
 void accacia_clrscr() {
     printf("\033[2J");
     accacia_gotoxy(1, 1);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_cursorup(const int x) {
     printf("\033[%dA", x);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_cursordown(const int x) {
     printf("\033[%dB", x);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_cursorforward(const int y) {
     printf("\033[%dC", y);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_cursorbackward(const int y) {
     printf("\033[%dD", y);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_delline() {
     printf("\033[K");
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_savecursorposition() {
     printf("\033[s");
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_restorecursorposition() {
     printf("\033[u");
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
@@ -92,7 +92,7 @@ void accacia_textcolor(const ACCACIA_TEXT_COLOR color) {
         temp_color += diff;
     }
     printf("\033[%dm", temp_color);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
@@ -106,21 +106,21 @@ void accacia_textbackground(const ACCACIA_BACKGROUND_COLOR color) {
         temp_color = temp_color | 40;
     }
     printf("\033[%dm", temp_color);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_screennormalize() {
     printf("\033[m");
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
 void accacia_textstyle(const ACCACIA_TEXT_STYLE style) {
     printf("\033[%dm", style);
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
