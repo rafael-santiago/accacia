@@ -7,8 +7,8 @@
  * "accacia.h" by Rafael Santiago < voidbrainvoid@yahoo.com.br >
  *
  */
-#ifndef _ACCACIA_H_
-#define _ACCACIA_H_
+#ifndef ACCACIA_H_
+#define ACCACIA_H_
 
 #include <unistd.h>
 
@@ -25,7 +25,7 @@ typedef enum ACCACIA_TEXT_COLOR_DEFINES {
  AC_TCOLOR_WHITE   = 37
 }ACCACIA_TEXT_COLOR;
 
-typedef enum ACCACIA_BRACKGROUND_COLOR_DEFINES {
+typedef enum ACCACIA_BACKGROUND_COLOR_DEFINES {
  AC_BCOLOR_BLACK   = 40,
  AC_BCOLOR_RED     = 41,
  AC_BCOLOR_GREEN   = 42,
@@ -50,7 +50,7 @@ typedef enum ACCACIA_TEXT_STYLES_DEFINES {
 
 void accacia_gotoxy(const int x, const int y);
 
-void accacia_clrscr();
+void accacia_clrscr(void);
 
 void accacia_cursorup(const int x);
 
@@ -60,17 +60,17 @@ void accacia_cursorforward(const int y);
 
 void accacia_cursorbackward(const int y);
 
-void accacia_delline();
+void accacia_delline(void);
 
-void accacia_savecursorposition();
+void accacia_savecursorposition(void);
 
-void accacia_restorecursorposition();
+void accacia_restorecursorposition(void);
 
 void accacia_textcolor(const ACCACIA_TEXT_COLOR color);
 
 void accacia_textbackground(const ACCACIA_BACKGROUND_COLOR color);
 
-void accacia_screennormalize();
+void accacia_screennormalize(void);
 
 void accacia_textstyle(const ACCACIA_TEXT_STYLE style);
 
@@ -92,11 +92,15 @@ void accacia_drawboxwcharfillgine(const int x, const int y, const int width, con
 
 void accacia_gets(char *buf);
 
-int accacia_kbhit();
+int accacia_kbhit(void);
 
-unsigned char accacia_getch();
+unsigned char accacia_getch(void);
 
 char accacia_getkey(void);
+
+void accacia_enable(void);
+
+void accacia_disable(void);
 
 #endif
 

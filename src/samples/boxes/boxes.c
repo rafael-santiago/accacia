@@ -1,3 +1,9 @@
+/*
+ *                                 (C) Copyright Rafael Santiago 2014
+ *
+ * This is free software. You can redistribute it and/or modify under
+ * the terms of the GNU General Public License version 2.
+ */
 #include <accacia.h>
 #include <stdlib.h>
 #include <time.h>

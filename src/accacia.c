@@ -17,14 +17,31 @@
 #include <termios.h>
 #include <string.h>
 
+static unsigned char g_accacia_enabled = 1;
+
+void accacia_enable(void) {
+    g_accacia_enabled = 1;
+}
+
+void accacia_disable(void) {
+    g_accacia_enabled = 0;
+}
+
 void accacia_gotoxy(const int x, const int y) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     printf("\033[%d;%dH", y, x);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
-void accacia_clrscr() {
+void accacia_clrscr(void) {
+    if (!g_accacia_enabled) {
+        printf("\n");
+        return;
+    }
     printf("\033[2J");
     accacia_gotoxy(1, 1);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
@@ -33,6 +50,10 @@ void accacia_clrscr() {
 }
 
 void accacia_cursorup(const int x) {
+    if (!g_accacia_enabled) {
+        printf("\n");
+        return;
+    }
     printf("\033[%dA", x);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
@@ -40,6 +61,10 @@ void accacia_cursorup(const int x) {
 }
 
 void accacia_cursordown(const int x) {
+    if (!g_accacia_enabled) {
+        printf("\n");
+        return;
+    }
     printf("\033[%dB", x);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
@@ -47,6 +72,10 @@ void accacia_cursordown(const int x) {
 }
 
 void accacia_cursorforward(const int y) {
+    if (!g_accacia_enabled) {
+        printf("\n");
+        return;
+    }
     printf("\033[%dC", y);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
@@ -54,27 +83,41 @@ void accacia_cursorforward(const int y) {
 }
 
 void accacia_cursorbackward(const int y) {
+    if (!g_accacia_enabled) {
+        printf("\n");
+        return;
+    }
     printf("\033[%dD", y);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
-void accacia_delline() {
+void accacia_delline(void) {
+    if (!g_accacia_enabled) {
+        printf("\n");
+        return;
+    }
     printf("\033[K");
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
-void accacia_savecursorposition() {
+void accacia_savecursorposition(void) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     printf("\033[s");
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 #endif
 }
 
-void accacia_restorecursorposition() {
+void accacia_restorecursorposition(void) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     printf("\033[u");
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
@@ -84,6 +127,9 @@ void accacia_restorecursorposition() {
 void accacia_textcolor(const ACCACIA_TEXT_COLOR color) {
     int diff;
     int temp_color = color;
+    if (!g_accacia_enabled) {
+        return;
+    }
     if (color > 37) {
         diff   = color - 37;
         temp_color -= diff;
@@ -99,6 +145,9 @@ void accacia_textcolor(const ACCACIA_TEXT_COLOR color) {
 
 void accacia_textbackground(const ACCACIA_BACKGROUND_COLOR color) {
     int temp_color = color;
+    if (!g_accacia_enabled) {
+        return;
+    }
     if (color > 47) {
         temp_color = color | 40;
     } else if (color < 40) {
@@ -111,7 +160,10 @@ void accacia_textbackground(const ACCACIA_BACKGROUND_COLOR color) {
 #endif
 }
 
-void accacia_screennormalize() {
+void accacia_screennormalize(void) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     printf("\033[m");
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
@@ -119,6 +171,9 @@ void accacia_screennormalize() {
 }
 
 void accacia_textstyle(const ACCACIA_TEXT_STYLE style) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     printf("\033[%dm", style);
 #if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
@@ -127,6 +182,9 @@ void accacia_textstyle(const ACCACIA_TEXT_STYLE style) {
 
 void accacia_drawbox(const int x, const int y, const int width, const int height, const ACCACIA_BACKGROUND_COLOR color) {
     int i, j, xtemp = x, ytemp = y;
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_textbackground(color);
     for(i = 0;i < width; i++, xtemp++) {
         for(j = 0, ytemp = y; j < height; j++, ytemp++) {
@@ -139,6 +197,9 @@ void accacia_drawbox(const int x, const int y, const int width, const int height
 void accacia_drawboxwcharfill(const int x, const int y, const int width, const int height, const char charfill,
                               const ACCACIA_TEXT_COLOR tcolor, const ACCACIA_BACKGROUND_COLOR bcolor) {
     int i, j, xtemp = x, ytemp = y;
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_textbackground(bcolor);
     accacia_textcolor(tcolor);
     for(i = 0; i < width; i++, xtemp++) {
@@ -153,6 +214,9 @@ void accacia_drawtopmargin(const int x, const int y, const int width, const char
                            const ACCACIA_TEXT_COLOR titlecolor, const ACCACIA_BACKGROUND_COLOR margincolor,
                            const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int i;
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_textbackground(margincolor);
     accacia_gotoxy(x, y);
     for(i = 0; i < width; printf(" "), i++);
@@ -169,6 +233,9 @@ void accacia_drawbottommargin(const int x, const int y, const int width, const i
                               const char *title, const ACCACIA_TEXT_COLOR titlecolor,
                               const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int i;
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_textbackground(margincolor);
     accacia_gotoxy(x, y + height);
     for(i = 0; i < width; printf(" "), i++);
@@ -184,6 +251,9 @@ void accacia_drawbottommargin(const int x, const int y, const int width, const i
 void accacia_drawleftmargin(const int x, const int y, const int height, const ACCACIA_BACKGROUND_COLOR margincolor,
                             const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int ytemp = y;
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_textbackground(margincolor);
     for(; ytemp <= y + height; accacia_gotoxy(x, ytemp), printf(" "), ytemp++);
     accacia_textbackground(boxcolor);
@@ -193,6 +263,9 @@ void accacia_drawleftmargin(const int x, const int y, const int height, const AC
 void accacia_drawrightmargin(const int x, const int y, const int width, const int height,
                              const ACCACIA_BACKGROUND_COLOR margincolor, const ACCACIA_BACKGROUND_COLOR boxcolor) {
     int ytemp = y;
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_textbackground(margincolor);
     for(; ytemp <= y + height; accacia_gotoxy(x + width - 1, ytemp), printf(" "), ytemp++);
     accacia_textbackground(boxcolor);
@@ -204,6 +277,9 @@ void accacia_drawboxgine(const int x, const int y, const int width, const int he
                          const char *toptitle, const ACCACIA_TEXT_COLOR toptitlecolor, const char *bottomtitle,
                          const ACCACIA_TEXT_COLOR bottomtitlecolor, const int margintop, const int marginbottom,
                          const int marginleft, const int marginright) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_drawbox(x, y, width, height, boxcolor);
     if (marginleft) {
         accacia_drawleftmargin(x, y, height, margincolor, boxcolor);
@@ -225,6 +301,9 @@ void accacia_drawboxwcharfillgine(const int x, const int y, const int width, con
                                   const ACCACIA_TEXT_COLOR toptitlecolor, const char *bottomtitle,
                                   const ACCACIA_TEXT_COLOR bottomtitlecolor, const int margintop,
                                   const int marginbottom, const int marginleft, const int marginright) {
+    if (!g_accacia_enabled) {
+        return;
+    }
     accacia_drawboxwcharfill(x, y, width, height, charfill, ccolor, boxcolor);
     if (marginleft) {
         accacia_drawleftmargin(x, y, height, margincolor, boxcolor);
@@ -259,7 +338,7 @@ int accacia_kbhit() {
     return res;
 }
 
-unsigned char accacia_getch() {
+unsigned char accacia_getch(void) {
     unsigned char c;
     struct termios attr, oldattr;
     getc(stdout);
