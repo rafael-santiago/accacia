@@ -144,6 +144,7 @@ void accacia_delline(void) {
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
     WORD x;
     CONSOLE_SCREEN_BUFFER_INFO info;
     ACCACIA_WINCON_HANDLE_PREPARE
@@ -165,6 +166,7 @@ void accacia_savecursorposition(void) {
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
     CONSOLE_SCREEN_BUFFER_INFO info;
     ACCACIA_WINCON_HANDLE_PREPARE
     GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &info);
@@ -181,6 +183,7 @@ void accacia_restorecursorposition(void) {
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
     ACCACIA_WINCON_HANDLE_PREPARE
     SetConsoleCursorPosition(g_accacia_wincon_handle, g_accacia_saved_coords);
 #endif
