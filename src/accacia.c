@@ -149,6 +149,9 @@ void accacia_delline(void) {
     CONSOLE_SCREEN_BUFFER_INFO info;
     ACCACIA_WINCON_HANDLE_PREPARE
     GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &info);
+    // WARN(Rafael): Unfortunately we need to do this embarassing loop because
+    //               under cygwin/msys a memset, fwrite seems to produce a
+    //               weird behavior. Thus let's keep it "simple".
     printf("\r");
     for (x = 1; x < info.dwSize.X; x++) {
         printf(" ");
