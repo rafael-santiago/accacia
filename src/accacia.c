@@ -17,6 +17,7 @@
 # include <fcntl.h>
 # include <termios.h>
 #else
+# include <ctype.h>
 # include <conio.h>
 #endif
 #include <string.h>
@@ -34,6 +35,51 @@ static unsigned char g_accacia_enabled = 1;
             GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &g_accacia_wincon_default_attr);\
         }\
     }\
+}
+
+static const char *uname(void);
+
+static int has_toynix(void);
+
+const char *uname(void) {
+    static char buf[4096] = "", *bp, *bp_end;
+    FILE *uname;
+    if (buf[0] == 0) {
+        setbuf(stderr, NULL);
+        if ((uname = popen("uname 2> NUL & rm NUL 2> NUL", "r")) == NULL) {
+            buf[0] = '?';
+            buf[1] = 0;
+            goto uname_epilogue;
+        }
+        memset(buf, 0, sizeof(buf));
+        fread(buf, 1, sizeof(buf), uname);
+        if (buf[0] == 0) {
+            buf[0] = '?';
+            buf[1] = 0;
+        } else {
+            bp = &buf[0];
+            bp_end = bp + sizeof(buf);
+            while (bp != bp_end && *bp != 0) {
+                *bp = toupper(*bp);
+                bp++;
+            }
+        }
+        fclose(uname);
+    }
+uname_epilogue:
+    return &buf[0];
+}
+
+static int has_toynix(void) {
+    static int has = -1;
+    const char *platform;
+
+    if (has == -1) {
+        platform = uname();
+        has = (strstr(platform, "CYGWIN") != NULL || strstr(platform, "MSYS") != NULL || strstr(platform, "MINGW") != NULL);
+    }
+
+    return has;
 }
 #endif
 
@@ -53,152 +99,210 @@ void accacia_gotoxy(const int x, const int y) {
     if (!g_accacia_enabled) {
         return;
     }
-#if !defined(_WIN32)
+#if defined(__unix__)
     printf("\033[%d;%dH", y, x);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
-#else
-    screen.X = x;
-    screen.Y = y;
-    SetConsoleCursorPosition(g_accacia_wincon_handle, screen);
+#elif defined(_WIN32)
+    if (has_toynix()) {
+        printf("\033[%d;%dH", y, x);
+        fflush(stdout);
+    } else {
+        screen.X = x;
+        screen.Y = y;
+        SetConsoleCursorPosition(g_accacia_wincon_handle, screen);
+    }
 #endif
 }
 
 void accacia_clrscr(void) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         printf("\n");
         return;
     }
+#if defined(__unix__)
     printf("\033[2J");
     accacia_gotoxy(1, 1);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
-#else
-    ACCACIA_WINCON_HANDLE_PREPARE
-    system("@cls");
+#elif defined(_WIN32)
+    if (!has_toynix()) {
+        ACCACIA_WINCON_HANDLE_PREPARE
+        system("@cls");
+    } else {
+        printf("\033[2J");
+        accacia_gotoxy(1, 1);
+        fflush(stdout);
+    }
 #endif
 }
 
 void accacia_cursorup(const int x) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         printf("\n");
         return;
     }
+#if defined(__unix__)
     printf("\033[%dA", x);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
+    if (has_toynix()) {
+        printf("\033[%dA", x);
+        fflush(stdout);
+    }
 #endif
 }
 
 void accacia_cursordown(const int x) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         printf("\n");
         return;
     }
+#if defined(__unix__)
     printf("\033[%dB", x);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
+    if (has_toynix()) {
+        printf("\033[%dB", x);
+        fflush(stdout);
+    }
 #endif
 }
 
 void accacia_cursorforward(const int y) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         printf("\n");
         return;
     }
+#if defined(__unix__)
     printf("\033[%dC", y);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
+    if (has_toynix()) {
+        printf("\033[%dC", y);
+        fflush(stdout);
+    }
 #endif
 }
 
 void accacia_cursorbackward(const int y) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         printf("\n");
         return;
     }
+#if defined(__unix__)
     printf("\033[%dD", y);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
+#elif defined(_WIN32)
+    if (has_toynix()) {
+        printf("\033[%dD", y);
+        fflush(stdout);
+    }
 #endif
 }
 
 void accacia_delline(void) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         printf("\n");
         return;
     }
+#if defined(__unix__)
     printf("\033[K");
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
 #elif defined(_WIN32)
-    WORD x;
-    CONSOLE_SCREEN_BUFFER_INFO info;
-    ACCACIA_WINCON_HANDLE_PREPARE
-    GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &info);
-    // WARN(Rafael): Unfortunately we need to do this embarassing loop because
-    //               under cygwin/msys a memset, fwrite seems to produce a
-    //               weird behavior. Thus let's keep it "simple".
-    printf("\r");
-    for (x = 1; x < info.dwSize.X; x++) {
-        printf(" ");
+    if (has_toynix()) {
+        printf("\033[K");
+        fflush(stdout);
+    } else {
+        size_t x;
+        CONSOLE_SCREEN_BUFFER_INFO info;
+        char scr_buf[65535];
+        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &info);
+        scr_buf[0] = '\r';
+        x = info.dwSize.X % (sizeof(scr_buf) - 1);
+        memset(&scr_buf[1], ' ', x);
+        scr_buf[x - 1] = '\r';
+        fwrite(&scr_buf[0], x, 1, stdout);
+        fflush(stdout);
+        /*WORD x;
+        CONSOLE_SCREEN_BUFFER_INFO info;
+        ACCACIA_WINCON_HANDLE_PREPARE
+        GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &info);
+        // WARN(Rafael): Unfortunately we need to do this embarassing loop because
+        //               under cygwin/msys a memset, fwrite seems to produce a
+        //               weird behavior. Thus let's keep it "simple".
+        printf("\r");
+        for (x = 1; x < info.dwSize.X; x++) {
+            printf(" ");
+        }
+        printf("\r");*/
     }
-    printf("\r");
 #endif
 }
 
 void accacia_savecursorposition(void) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         return;
     }
+#if defined(__unix__)
     printf("\033[s");
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
 #elif defined(_WIN32)
-    CONSOLE_SCREEN_BUFFER_INFO info;
-    ACCACIA_WINCON_HANDLE_PREPARE
-    GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &info);
-    g_accacia_saved_coords = info.dwCursorPosition;
+    if (has_toynix()) {
+        printf("\033[s");
+        fflush(stdout);
+    } else {
+        CONSOLE_SCREEN_BUFFER_INFO info;
+        ACCACIA_WINCON_HANDLE_PREPARE
+        GetConsoleScreenBufferInfo(g_accacia_wincon_handle, &info);
+        g_accacia_saved_coords = info.dwCursorPosition;
+    }
 #endif
 }
 
 void accacia_restorecursorposition(void) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         return;
     }
+#if defined(__unix__)
     printf("\033[u");
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
 #elif defined(_WIN32)
-    ACCACIA_WINCON_HANDLE_PREPARE
-    SetConsoleCursorPosition(g_accacia_wincon_handle, g_accacia_saved_coords);
+    if (has_toynix()) {
+        printf("\033[u");
+        fflush(stdout);
+    } else {
+        ACCACIA_WINCON_HANDLE_PREPARE
+        SetConsoleCursorPosition(g_accacia_wincon_handle, g_accacia_saved_coords);
+    }
 #endif
 }
 
 void accacia_textcolor(const ACCACIA_TEXT_COLOR color) {
-#if !defined(_WIN32)
+#if defined(__unix__)
     int diff;
     int temp_color = color;
+#endif
     if (!g_accacia_enabled) {
         return;
     }
+#if defined(__unix__)
     if (color > 37) {
         diff   = color - 37;
         temp_color -= diff;
@@ -210,18 +314,41 @@ void accacia_textcolor(const ACCACIA_TEXT_COLOR color) {
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
-#else
-    ACCACIA_WINCON_HANDLE_PREPARE
-    SetConsoleTextAttribute(g_accacia_wincon_handle, color | g_accacia_wincon_curr_tstyle);
+#elif defined(_WIN32)
+    if (has_toynix()) {
+#define wincolor2ansicolor(c) (\
+        ((c) == AC_TCOLOR_BLACK)   ? 30\
+                                   :\
+        ((c) == AC_TCOLOR_RED)     ? 31\
+                                   :\
+        ((c) == AC_TCOLOR_GREEN)   ? 32\
+                                   :\
+        ((c) == AC_TCOLOR_YELLOW)  ? 33\
+                                   :\
+        ((c) == AC_TCOLOR_BLUE)    ? 34\
+                                   :\
+        ((c) == AC_TCOLOR_MAGENTA) ? 35\
+                                   :\
+        ((c) == AC_TCOLOR_CYAN)    ? 36\
+                                   : 37 )
+        printf("\033[%dm", wincolor2ansicolor(color));
+        fflush(stdout);
+#undef wincolor2ansicolor
+    } else {
+        ACCACIA_WINCON_HANDLE_PREPARE
+        SetConsoleTextAttribute(g_accacia_wincon_handle, color | g_accacia_wincon_curr_tstyle);
+    }
 #endif
 }
 
 void accacia_textbackground(const ACCACIA_BACKGROUND_COLOR color) {
-#if !defined(_WIN32)
+#if defined(__unix__)
     int temp_color = color;
+#endif
     if (!g_accacia_enabled) {
         return;
     }
+#if defined(__unix__)
     if (color > 47) {
         temp_color = color | 40;
     } else if (color < 40) {
@@ -232,39 +359,71 @@ void accacia_textbackground(const ACCACIA_BACKGROUND_COLOR color) {
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
-#else
-    ACCACIA_WINCON_HANDLE_PREPARE
-    SetConsoleTextAttribute(g_accacia_wincon_handle, color);
+#elif defined(_WIN32)
+    if (has_toynix()) {
+#define wincolor2ansicolor(c) (\
+        ((c) == AC_BCOLOR_BLACK)   ? 40\
+                                   :\
+        ((c) == AC_BCOLOR_RED)     ? 41\
+                                   :\
+        ((c) == AC_BCOLOR_GREEN)   ? 42\
+                                   :\
+        ((c) == AC_BCOLOR_YELLOW)  ? 43\
+                                   :\
+        ((c) == AC_BCOLOR_BLUE)    ? 44\
+                                   :\
+        ((c) == AC_BCOLOR_MAGENTA) ? 45\
+                                   :\
+        ((c) == AC_BCOLOR_CYAN)    ? 46\
+                                   : 47 )
+        printf("\033[%dm", wincolor2ansicolor(color));
+        fflush(stdout);
+#undef wincolor2ansicolor
+    } else {
+        ACCACIA_WINCON_HANDLE_PREPARE
+        SetConsoleTextAttribute(g_accacia_wincon_handle, color);
+    }
 #endif
 }
 
 void accacia_screennormalize(void) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         return;
     }
+#if defined(__unix__)
     printf("\033[m");
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
-#else
+#elif defined(_WIN32)
+    if (has_toynix()) {
+        printf("\033[m");
+        fflush(stdout);
+    }
     ACCACIA_WINCON_HANDLE_PREPARE
     SetConsoleTextAttribute(g_accacia_wincon_handle, g_accacia_wincon_default_attr.wAttributes);
 #endif
 }
 
 void accacia_textstyle(const ACCACIA_TEXT_STYLE style) {
-#if !defined(_WIN32)
     if (!g_accacia_enabled) {
         return;
     }
+#if defined(__unix__)
     printf("\033[%dm", style);
 # if defined(__FreeBSD__) || defined(__OpenBSD__)
     fflush(stdout);
 # endif
-#else
-    ACCACIA_WINCON_HANDLE_PREPARE
-    g_accacia_wincon_curr_tstyle = style;
+#elif defined(_WIN32)
+    if (has_toynix()) {
+#define winstyle2ansistyle(s) ( ((s) == AC_TSTYLE_BOLD) ? 1 : (s) )
+        printf("\033[%dm", winstyle2ansistyle(style));
+        fflush(stdout);
+#undef winstyle2ansistyle
+    } else {
+        ACCACIA_WINCON_HANDLE_PREPARE
+        g_accacia_wincon_curr_tstyle = style;
+    }
 #endif
 }
 
@@ -413,7 +572,7 @@ void accacia_gets(char *buf) {
 }
 
 int accacia_kbhit() {
-#if !defined(_WIN32)
+#if defined(__unix__)
     int res;
     struct termios attr, oldattr;
     getc(stdout);
