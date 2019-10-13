@@ -6,6 +6,7 @@
 # Main Forgefile
 
 include ~/toolsets/gcc/gcc-lib.hsl
+include ~/toolsets/clang/clang-lib.hsl
 
 var sources type list;
 var includes type list;
@@ -13,7 +14,9 @@ var cflags type list;
 var libraries type list;
 var ldflags type list;
 
-project accacia : toolset "gcc-c-lib" : $sources, $includes, $cflags, $libraries, $ldflags, "libaccacia.a";
+var curr_toolset type string;
+
+project accacia : toolset $curr_toolset : $sources, $includes, $cflags, $libraries, $ldflags, "libaccacia.a";
 
 accacia.prologue() {
     $sources.ls(".*\\.c");
@@ -26,5 +29,24 @@ accacia.epilogue() {
         hefesto.sys.echo("\n____\nsuccess!\n");
     } else {
         hefesto.sys.echo("\n____\nerror...\n");
+    }
+}
+
+accacia.preloading() {
+    $curr_toolset = "boo";
+
+    var dev_null type string;
+    if (hefesto.sys.os_name() != "windows") {
+        $dev_null = " > /dev/null 2>&1";
+    } else {
+        $dev_null = " > nul 2>&1";
+    }
+
+    if (hefesto.sys.run("gcc --version" + $dev_null) == 0) {
+        $curr_toolset = "gcc-c-lib";
+    } else if (hefesto.sys.run("clang --version" + $dev_null) == 0) {
+        $curr_toolset = "clang-c-lib";
+    } else {
+        hefesto.sys.echo("ERROR: You must have at least gcc or clang installed to build this library.\n");
     }
 }
