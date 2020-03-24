@@ -14,6 +14,9 @@
 #include <stdlib.h>
 #if !defined(_WIN32)
 # include <sys/ioctl.h>
+# if defined(__sun__)
+#  include <sys/filio.h>
+# endif
 # include <fcntl.h>
 # include <termios.h>
 #else
